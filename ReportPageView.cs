@@ -71,7 +71,7 @@ namespace PageViewCounter
                 /* discard */_ = Task.Factory.StartNew(RecordViewsFromQueue);
             }
 
-            return new OkObjectResult("\u2713"); // Check mark
+            return CorsOkResult.Instance;
         }
 
         const string c_tableName = "PageViewCounts";
@@ -157,6 +157,23 @@ namespace PageViewCounter
             public DateTimeOffset? Timestamp { get; set; }
             public ETag ETag { get; set; }
             public Int32 Count { get; set; }
+        }
+    }
+
+    class CorsOkResult : OkObjectResult
+    {
+        // Singleton Pattern
+        public static readonly CorsOkResult Instance = new CorsOkResult();
+
+        private CorsOkResult()
+            : base("\u2713") // Check mark
+        {
+        }
+
+        public override Task ExecuteResultAsync(ActionContext context)
+        {
+            context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            return base.ExecuteResultAsync(context);
         }
     }
 }
