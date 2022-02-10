@@ -71,7 +71,7 @@ namespace PageViewCounter
                 /* discard */_ = Task.Factory.StartNew(RecordViewsFromQueue);
             }
 
-            return new OkResult();
+            return new OkObjectResult("\u2713"); // Check mark
         }
 
         const string c_tableName = "PageViewCounts";
